@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
 
+  final String npm = "2506608123";
   final String nama = "Tania Ju";
   final String kelas = "PBP A";
 
@@ -38,7 +39,15 @@ class MyHomePage extends StatelessWidget {
 
               const SizedBox(height: 16.0),
               Row(
+                
                 children: [
+                  Expanded(
+                    child: InfoCard(
+                      title: 'NPM',
+                      content: npm,
+                      icon: Icons.badge_rounded,
+                    ),
+                  ),
                   const SizedBox(width: 8.0),
                   Expanded(
                     child: InfoCard(
