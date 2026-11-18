@@ -1,5 +1,14 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:myportofolio_mobile/utils/form_validators.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
+
+/// Field, label, dan aturan validasi disesuaikan mengikuti model `Project` dan
+/// `ProjectForm` pada web portofolio Django (main/models.py & main/forms.py):
+/// - title             : wajib, maks. 255 karakter
+/// - description       : wajib
+/// - tech_stack        : wajib, maks. 255 karakter
+/// - project_url       : opsional, URL valid (maks. 200 karakter)
+/// - project_image_url : opsional, URL valid (maks. 500 karakter)
 
 class ProjectFormPage extends StatefulWidget {
   const ProjectFormPage({super.key});
@@ -11,19 +20,37 @@ class ProjectFormPage extends StatefulWidget {
 class _ProjectFormPageState extends State<ProjectFormPage> {
   final _formKey = GlobalKey<FormState>();
 
-  String _projectName = "";
+  String _title = "";
   String _description = "";
-  String _category = "Web Development"; // default
-  String _technologies = "";
-  String _projectLink = "";
+  String _techStack = "";
+  String _projectUrl = "";
+  String _projectImageUrl = "";
 
-  final List<String> _categories = [
-    'Web Development',
-    'Mobile Development',
-    'Machine Learning',
-    'Data Science',
-    'Other',
-  ];
+  InputDecoration _decoration(String label, {String? hint}) {
+    return InputDecoration(
+      labelText: label,
+      hintText: hint,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+    );
+  }
+
+  /// Mengosongkan tampilan form sekaligus variabel penyimpannya, agar isian
+  /// lama tidak ikut muncul di dialog jika field opsional dikosongkan.
+  void _resetForm() {
+    _formKey.currentState!.reset();
+    setState(() {
+      _title = "";
+      _description = "";
+      _techStack = "";
+      _projectUrl = "";
+      _projectImageUrl = "";
+    });
+  }
+
+  /// Menampilkan "-" untuk field opsional yang dikosongkan.
+  String _orDash(String value) => value.trim().isEmpty ? '-' : value.trim();
 
   @override
   Widget build(BuildContext context) {
@@ -44,118 +71,120 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // === Project Name ===
+              // === Header ===
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Masukkan detail project terbaru.',
+                  style: TextStyle(color: Colors.grey[700]),
+                ),
+              ),
+
+              // === Project Name (Title) ===
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Nama Proyek",
-                    labelText: "Nama Proyek",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
+                  maxLength: 255,
+                  textInputAction: TextInputAction.next,
+                  decoration: _decoration(
+                    "Nama Proyek",
+                    hint: "Nama Proyek",
                   ),
                   onChanged: (String value) {
                     setState(() {
-                      _projectName = value;
+                      _title = value;
                     });
                   },
-                  validator: (String? value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return "Nama proyek tidak boleh kosong!";
-                    }
-                    return null;
-                  },
+                  validator: (String? value) => validateRequiredText(
+                    value, 
+                    fieldName: "Nama Proyek",
+                    maxLength: 255),
                 ),
               ),
+
               // === Description ===
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  minLines: 3,
                   maxLines: 5,
-                  decoration: InputDecoration(
-                    hintText: "Deskripsi Proyek",
-                    labelText: "Deskripsi Proyek",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
+                  keyboardType: TextInputType.multiline,
+                  decoration: _decoration(
+                    "Deskripsi Proyek",
+                    hint: "Deskripsi Proyek",
                   ),
-                  onChanged: (String? value) {
+                  onChanged: (String value) {
                     setState(() {
-                      _description = value!;
+                      _description = value;
                     });
                   },
-                  validator: (String? value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return "Deskripsi proyek tidak boleh kosong!";
-                    }
-                    return null;
-                  },
+                  validator: (String? value) => validateRequiredText(
+                    value, 
+                    fieldName: "Deskripsi Proyek",
+                  ),
                 ),
               ),
 
-              // === Category ===
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    labelText: "Kategori Proyek",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                  ),
-                  initialValue: _category,
-                  items: _categories
-                      .map((category) => DropdownMenuItem(
-                            value: category,
-                            child: Text(category),
-                          ))
-                      .toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _category = newValue!;
-                    });
-                  },
-                ),
-              ),
-
-              // === Technologies ===
+              // === Tech Stack ===
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Contoh: Flutter, Django, Figma",
-                    labelText: "Teknologi yang Digunakan",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
+                  maxLength: 255,
+                  textInputAction: TextInputAction.next,
+                  decoration: _decoration(
+                    "Tech Stack yang digunakan",
+                    hint: "Contoh: Django, Flutter, HTML, CSS",
                   ),
-                  onChanged: (String? value) {
+                  onChanged: (String value) {
                     setState(() {
-                      _technologies = value!;
+                      _techStack = value;
                     });
                   },
+                  validator: (String? value) => validateRequiredText(
+                    value,
+                    fieldName: "Tech Stack",
+                    maxLength: 255,
+                  ),
                 ),
               ),
 
-              // === Project Link ===
+              // === Project URL ===
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "URL Proyek (opsional)",
-                    labelText: "Tautan Proyek",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
+                  keyboardType: TextInputType.url,
+                  textInputAction: TextInputAction.next,
+                  decoration: _decoration(
+                    "URL Proyek (opsional)",
                   ),
-                  onChanged: (String? value) {
+                  onChanged: (String value) {
                     setState(() {
-                      _projectLink = value!;
+                      _projectUrl = value;
                     });
                   },
+                  validator: (String? value) =>
+                      validateOptionalUrl(value, maxLength: 200),
                 ),
               ),
+
+              // === Project Image URL ===
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  keyboardType: TextInputType.url,
+                  decoration: _decoration(
+                    "URL Gambar/Sampul Proyek (opsional)",
+                  ),
+                  onChanged: (String value) {
+                    setState(() {
+                      _projectImageUrl = value;
+                    });
+                  },
+                  validator: (String? value) =>
+                      validateOptionalUrl(value, maxLength: 500),
+                ),
+              ),
+
               // === Tombol Simpan ===
               Align(
                 alignment: Alignment.bottomCenter,
@@ -176,12 +205,13 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
                               content: SingleChildScrollView(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text('Nama Proyek: $_projectName'),
-                                    Text('Deskripsi: $_description'),
-                                    Text('Kategori: $_category'),
-                                    Text('Teknologi: $_technologies'),
-                                    Text('Tautan: $_projectLink'),
+                                    Text('Nama Proyek: ${_title.trim()}'),
+                                    Text('Deskripsi: ${_description.trim()}'),
+                                    Text('Tech Stack: ${_techStack.trim()}'),
+                                    Text('URL Proyek: ${_orDash(_projectUrl)}'),
+                                    Text('URL Gambar: ${_orDash(_projectImageUrl)}'),
                                   ],
                                 ),
                               ),
@@ -190,7 +220,7 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
                                   child: const Text('OK'),
                                   onPressed: () {
                                     Navigator.pop(context);
-                                    _formKey.currentState!.reset();
+                                    _resetForm();
                                   },
                                 ),
                               ],
