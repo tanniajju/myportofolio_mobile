@@ -114,6 +114,7 @@ Dalam pengerjaan proyek myportofolio-mobile (Tugas 8), sejauh ini saya memanfaat
  
 1.  **Penyesuaian Form dengan Web:** AI membantu menyesuaikan form proyek dengan model Project di web dan membantu memindahkan validator yang dipakai ulang ke file validator bersama.
 2.  **Kerangka Pertanyaan Reflektif:** AI membantu mengevaluasi jawaban saya untuk keempat pertanyaan. Saya melengkapi jawaban yang masih kurang dengan masukan AI menggunakan kalimat sendiri dan menyesuaikannya dengan kode proyek saya.
+3.  **Testing:** AI membantu membuat form_test.dart, yaitu unit test untuk validator, form pengalaman, dan form proyek. AI juga menunjukkan perlunya penyesuaian di test widget.
 
     **Perbaikan Manual & Keterbatasan AI:**
 Saya menanyakan ulang bagian kode yang belum saya pahami sebelum memakainya, lalu merapikan dan/atau menambahkan komentar sesuai gaya saya. AI juga tidak bisa menjalankan Flutter maupun membuka web deploy saya, sehingga flutter analyze, pengujian di Chrome, dan pengecekan alur navigasi saya lakukan sendiri.

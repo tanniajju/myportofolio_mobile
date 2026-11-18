@@ -16,6 +16,11 @@ void main() {
     // Verify that the NPM on app.
     expect(find.text('NPM'), findsOneWidget);
 
+    // Scroll until the logout button is visible, because it is in the
+    // second row of the 2-column grid (below the test screen).
+    await tester.ensureVisible(find.text('Logout'));
+    await tester.pumpAndSettle();
+
     // Verify that the logout button on app and trigger a frame.
     await tester.tap(find.text('Logout'));
     await tester.pump();
