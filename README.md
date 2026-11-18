@@ -5,13 +5,31 @@ NPM : 2506608123
 
 Kelas : PBP A
 
+## Cara Menjalankan
+ 
+1. Clone repositori ini, lalu masuk ke folder proyek:
+```
+git clone https://github.com/tanniajju/myportofolio_mobile.git
+cd myportofolio_mobile
+```
+2. Unduh dependensi:
+```
+flutter pub get
+```
+3. Jalankan aplikasi, misalnya di Chrome:
+```
+flutter run -d chrome
+```
+
 ## Logbook Progres Mingguan
 
 | Minggu | Tanggal | Progress / Fitur yang Dikerjakan | Tugas |
 | :---: | :--- | :--- | :--- |
 | **1** | 09 - 15 Nov 2026 | Setup proyek Flutter, `MyHomePage` stateless di `menu.dart`, tiga `InfoCard`, dan tiga `ItemCard` berwarna dengan *SnackBar* | Tugas 7: Basic Flutter |
 | **2** | 16 - 22 Nov 2026 | Membuat form dan validasi, serta navigasi dari kartu aksi dan drawer | Tugas 8: Navigation, Layouts, Forms, and Input Elements |
+
 ---
+
 
 <details>
 <summary>Tugas 7</summary>
@@ -95,7 +113,7 @@ Jenis input saja belum cukup karena hanya membatasi cara mengisi, bukan isi data
 Dalam pengerjaan proyek myportofolio-mobile (Tugas 8), sejauh ini saya memanfaatkan *Generative AI (claude)* sebagai pendiskusi teknis. Saya tetap melakukan intervensi teknis dan keputusan secara manual:
  
 1.  **Penyesuaian Form dengan Web:** AI membantu menyesuaikan form proyek dengan model Project di web dan membantu memindahkan validator yang dipakai ulang ke file validator bersama.
-2.  **Kerangka Pertanyaan Reflektif:** AI membantu mengevaluasi jawaban saya untuk keenam pertanyaan. Saya melengkapi jawaban yang masih kurang dengan masukan AI menggunakan kalimat sendiri dan menyesuaikannya dengan kode proyek saya.
+2.  **Kerangka Pertanyaan Reflektif:** AI membantu mengevaluasi jawaban saya untuk keempat pertanyaan. Saya melengkapi jawaban yang masih kurang dengan masukan AI menggunakan kalimat sendiri dan menyesuaikannya dengan kode proyek saya.
 
     **Perbaikan Manual & Keterbatasan AI:**
 Saya menanyakan ulang bagian kode yang belum saya pahami sebelum memakainya, lalu merapikan dan/atau menambahkan komentar sesuai gaya saya. AI juga tidak bisa menjalankan Flutter maupun membuka web deploy saya, sehingga flutter analyze, pengujian di Chrome, dan pengecekan alur navigasi saya lakukan sendiri.
