@@ -12,6 +12,7 @@ class MyHomePage extends StatelessWidget {
   final List<ItemHomepage> items = [
     ItemHomepage("Lihat Proyek", Icons.folder_special_rounded, Colors.indigo),
     ItemHomepage("Tambah Proyek", Icons.add_circle_rounded, Colors.teal),
+    ItemHomepage("Tambah Pengalaman", Icons.work_history_rounded, Colors.orange),
     ItemHomepage("Logout", Icons.logout_rounded, Colors.red),
   ];
 
@@ -82,12 +83,12 @@ class MyHomePage extends StatelessWidget {
               ),
               const SizedBox(height: 12.0),
 
-              // GridView 3 kolom untuk tombol Project, Experience, dan Skill.
+              // GridView 2 kolom
               GridView.count(
-                crossAxisCount: 3,
+                crossAxisCount: 2,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
-                childAspectRatio: 0.95,
+                childAspectRatio: 1.5,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 children: items.map((ItemHomepage item) {
