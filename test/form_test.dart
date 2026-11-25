@@ -2,8 +2,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:myportofolio_mobile/main.dart';
 import 'package:myportofolio_mobile/screens/experience_form.dart';
+import 'package:myportofolio_mobile/screens/login_screen.dart';
 import 'package:myportofolio_mobile/screens/project_form.dart';
 import 'package:myportofolio_mobile/utils/form_validators.dart';
+
+import 'test_helpers.dart';
 
 /// Scroll sampai widget dengan [text] terlihat, lalu tap.
 Future<void> scrollAndTap(WidgetTester tester, String text) async {
@@ -16,12 +19,14 @@ Future<void> scrollAndTap(WidgetTester tester, String text) async {
 void main() {
   // ================= Validator =================
   group('Validator', () {
-    test('teks wajib menolak isian kosong, hanya spasi, atau hanya tag HTML',
-        () {
-      expect(validateRequiredText(null, fieldName: 'Nama'), isNotNull);
-      expect(validateRequiredText('   ', fieldName: 'Nama'), isNotNull);
-      expect(validateRequiredText('<b></b>', fieldName: 'Nama'), isNotNull);
-    });
+    test(
+      'teks wajib menolak isian kosong, hanya spasi, atau hanya tag HTML',
+      () {
+        expect(validateRequiredText(null, fieldName: 'Nama'), isNotNull);
+        expect(validateRequiredText('   ', fieldName: 'Nama'), isNotNull);
+        expect(validateRequiredText('<b></b>', fieldName: 'Nama'), isNotNull);
+      },
+    );
 
     test('teks wajib menolak isian yang melebihi batas panjang', () {
       expect(
@@ -52,29 +57,34 @@ void main() {
 
   // ================= Form Pengalaman =================
   group('Form Pengalaman', () {
-    testWidgets('kartu Tambah Pengalaman membuka form pengalaman',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(const MyApp());
+    testWidgets('kartu Tambah Pengalaman membuka form pengalaman', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(MyApp(apiClient: fakeApiClient()));
       await scrollAndTap(tester, 'Tambah Pengalaman');
 
       expect(find.byType(ExperienceFormPage), findsOneWidget);
     });
 
-    testWidgets('Simpan dengan isian kosong menampilkan pesan error',
-        (WidgetTester tester) async {
+    testWidgets('Simpan dengan isian kosong menampilkan pesan error', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(const MaterialApp(home: ExperienceFormPage()));
       await scrollAndTap(tester, 'Simpan');
 
       expect(find.text('Nama pengalaman tidak boleh kosong!'), findsOneWidget);
       expect(
-          find.text('Deskripsi pengalaman tidak boleh kosong!'), findsOneWidget);
+        find.text('Deskripsi pengalaman tidak boleh kosong!'),
+        findsOneWidget,
+      );
       expect(find.text('Pilih kategori pengalaman!'), findsOneWidget);
       // Dialog tidak boleh muncul jika ada input yang tidak valid.
       expect(find.byType(AlertDialog), findsNothing);
     });
 
-    testWidgets('Simpan dengan isian valid menampilkan dialog ringkasan',
-        (WidgetTester tester) async {
+    testWidgets('Simpan dengan isian valid menampilkan dialog ringkasan', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(const MaterialApp(home: ExperienceFormPage()));
 
       await tester.enterText(
@@ -95,8 +105,10 @@ void main() {
       await scrollAndTap(tester, 'Simpan');
 
       expect(find.text('Pengalaman berhasil ditambahkan!'), findsOneWidget);
-      expect(find.text('Nama Pengalaman: Staff Acara Project Kesenian'),
-          findsOneWidget);
+      expect(
+        find.text('Nama Pengalaman: Staff Acara Project Kesenian'),
+        findsOneWidget,
+      );
       expect(find.text('Kategori: Internship'), findsOneWidget);
 
       // Tombol OK menutup dialog dan kembali ke formulir.
@@ -109,23 +121,70 @@ void main() {
 
   // ================= Form Proyek =================
   group('Form Proyek', () {
-    testWidgets('kartu Tambah Proyek membuka form proyek',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(const MyApp());
+    testWidgets('kartu Tambah Proyek meminta login lalu membuka form proyek', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(MyApp(apiClient: fakeApiClient()));
       await scrollAndTap(tester, 'Tambah Proyek');
 
+      // Belum login: halaman login muncul lebih dulu.
+      expect(find.byType(LoginScreen), findsOneWidget);
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Username'),
+        'admin',
+      );
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Password'),
+        'secret',
+      );
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(LoginScreen), findsNothing);
       expect(find.byType(ProjectFormPage), findsOneWidget);
     });
 
-    testWidgets('Save dengan isian kosong menampilkan pesan error',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(const MaterialApp(home: ProjectFormPage()));
+    testWidgets('Save dengan isian kosong menampilkan pesan error', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(wrapWithProviders(const ProjectFormPage()));
       await scrollAndTap(tester, 'Save');
 
       expect(find.text('Nama Proyek tidak boleh kosong!'), findsOneWidget);
       expect(find.text('Deskripsi Proyek tidak boleh kosong!'), findsOneWidget);
       expect(find.text('Tech Stack tidak boleh kosong!'), findsOneWidget);
+      expect(find.text('URL Proyek tidak boleh kosong!'), findsOneWidget);
       expect(find.byType(AlertDialog), findsNothing);
     });
+
+    testWidgets(
+      'Save dengan isian valid mengirim ke API dan menampilkan dialog',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          wrapWithProviders(const ProjectFormPage(), token: 'test-token'),
+        );
+
+        await tester.enterText(
+          find.widgetWithText(TextFormField, 'Nama Proyek'),
+          'Portfolio',
+        );
+        await tester.enterText(
+          find.widgetWithText(TextFormField, 'Deskripsi Proyek'),
+          'Web porto',
+        );
+        await tester.enterText(
+          find.widgetWithText(TextFormField, 'Tech Stack yang digunakan'),
+          'Django',
+        );
+        await tester.enterText(
+          find.widgetWithText(TextFormField, 'URL Proyek'),
+          'https://example.com',
+        );
+        await scrollAndTap(tester, 'Save');
+
+        expect(find.text('Proyek berhasil ditambahkan!'), findsOneWidget);
+        expect(find.text('Nama Proyek: Portfolio'), findsOneWidget);
+      },
+    );
   });
 }

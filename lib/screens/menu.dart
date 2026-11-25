@@ -12,7 +12,11 @@ class MyHomePage extends StatelessWidget {
   final List<ItemHomepage> items = [
     ItemHomepage("Lihat Proyek", Icons.folder_special_rounded, Colors.indigo),
     ItemHomepage("Tambah Proyek", Icons.add_circle_rounded, Colors.teal),
-    ItemHomepage("Tambah Pengalaman", Icons.work_history_rounded, Colors.orange),
+    ItemHomepage(
+      "Tambah Pengalaman",
+      Icons.work_history_rounded,
+      Colors.orange,
+    ),
     ItemHomepage("Logout", Icons.logout_rounded, Colors.red),
   ];
 
@@ -24,10 +28,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'MyPortfolio',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: colorScheme.primary,
@@ -44,7 +45,6 @@ class MyHomePage extends StatelessWidget {
 
               const SizedBox(height: 16.0),
               Row(
-                
                 children: [
                   Expanded(
                     child: InfoCard(
@@ -77,9 +77,8 @@ class MyHomePage extends StatelessWidget {
               // Judul bagian menu.
               Text(
                 'Menu Portofolio',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(context).textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12.0),
 
@@ -192,9 +191,8 @@ class InfoCard extends StatelessWidget {
             const SizedBox(height: 6.0),
             Text(
               title,
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: Theme.of(context).textTheme.labelMedium
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 2.0),
             // FittedBox mengecilkan teks panjang (mis. NPM) agar tetap

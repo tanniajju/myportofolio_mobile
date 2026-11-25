@@ -43,8 +43,18 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
 
   // Bahasa Indonesia
   static const List<String> _monthNames = [
-    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember',
   ];
 
   @override
@@ -81,8 +91,9 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
   bool get _isOngoing => _endedAt == null || _endedAt!.isAfter(_today());
 
   Future<void> _pickDate({required bool isStart}) async {
-    final initialDate =
-        isStart ? (_startedAt ?? _today()) : (_endedAt ?? _startedAt ?? _today());
+    final initialDate = isStart
+        ? (_startedAt ?? _today())
+        : (_endedAt ?? _startedAt ?? _today());
 
     final picked = await showDatePicker(
       context: context,
@@ -114,16 +125,11 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
 
   // ================= Validator =================
 
-  String? _validateTitle(String? value) => validateRequiredText(
-        value,
-        fieldName: "Nama pengalaman",
-        maxLength: 255,
-      );
+  String? _validateTitle(String? value) =>
+      validateRequiredText(value, fieldName: "Nama pengalaman", maxLength: 255);
 
-  String? _validateDescription(String? value) => validateRequiredText(
-        value,
-        fieldName: "Deskripsi pengalaman",
-      );
+  String? _validateDescription(String? value) =>
+      validateRequiredText(value, fieldName: "Deskripsi pengalaman");
 
   String? _validateCategory(String? value) {
     if (value == null || !_categories.containsKey(value)) {
@@ -186,13 +192,19 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                 const SizedBox(height: 4),
                 Text('Kategori: ${_categories[_category]}'),
                 const SizedBox(height: 4),
-                Text('URL Gambar: ${_thumbnail.trim().isEmpty ? '-' : _thumbnail.trim()}'),
+                Text(
+                  'URL Gambar: ${_thumbnail.trim().isEmpty ? '-' : _thumbnail.trim()}',
+                ),
                 const SizedBox(height: 4),
                 Text('Mulai: ${_formatDate(_startedAt!)}'),
                 const SizedBox(height: 4),
-                Text('Selesai: ${_endedAt == null ? '-' : _formatDate(_endedAt!)}'),
+                Text(
+                  'Selesai: ${_endedAt == null ? '-' : _formatDate(_endedAt!)}',
+                ),
                 const SizedBox(height: 4),
-                Text('Status: ${_isOngoing ? 'Sedang berlangsung' : 'Selesai'}'),
+                Text(
+                  'Status: ${_isOngoing ? 'Sedang berlangsung' : 'Selesai'}',
+                ),
               ],
             ),
           ),
@@ -212,14 +224,16 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
 
   // ================= Tampilan =================
 
-  InputDecoration _decoration(String label, {String? hint, Widget? suffixIcon}) {
+  InputDecoration _decoration(
+    String label, {
+    String? hint,
+    Widget? suffixIcon,
+  }) {
     return InputDecoration(
       labelText: label,
       hintText: hint,
       suffixIcon: suffixIcon,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(5.0),
-      ),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
     );
   }
 
@@ -303,10 +317,12 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                   hint: const Text("Pilih kategori"),
                   decoration: _decoration("Kategori Pengalaman"),
                   items: _categories.entries
-                      .map((entry) => DropdownMenuItem(
-                            value: entry.key,
-                            child: Text(entry.value),
-                          ))
+                      .map(
+                        (entry) => DropdownMenuItem(
+                          value: entry.key,
+                          child: Text(entry.value),
+                        ),
+                      )
                       .toList(),
                   onChanged: (String? newValue) {
                     setState(() {
@@ -322,9 +338,7 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   keyboardType: TextInputType.url,
-                  decoration: _decoration(
-                    "URL Gambar (opsional)",
-                  ),
+                  decoration: _decoration("URL Gambar (opsional)"),
                   onChanged: (String value) {
                     setState(() {
                       _thumbnail = value;
@@ -377,8 +391,9 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor:
-                          WidgetStateProperty.all(colorScheme.primary),
+                      backgroundColor: WidgetStateProperty.all(
+                        colorScheme.primary,
+                      ),
                     ),
                     onPressed: _onSave,
                     child: const Text(

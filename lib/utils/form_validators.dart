@@ -32,7 +32,8 @@ String? validateOptionalUrl(String? value, {int maxLength = 200}) {
   if (text.isEmpty) return null;
 
   final uri = Uri.tryParse(text);
-  final isValidUrl = uri != null &&
+  final isValidUrl =
+      uri != null &&
       (uri.scheme == 'http' || uri.scheme == 'https') &&
       uri.host.contains('.');
   if (!isValidUrl) {
@@ -42,4 +43,18 @@ String? validateOptionalUrl(String? value, {int maxLength = 200}) {
     return "URL maksimal $maxLength karakter.";
   }
   return null;
+}
+
+/// Validasi URL wajib: tidak boleh kosong, harus URL absolut (punya scheme
+/// http/https dan host), dan tidak melebihi [maxLength] karakter.
+String? validateRequiredUrl(
+  String? value, {
+  required String fieldName,
+  int maxLength = 200,
+}) {
+  final text = (value ?? '').trim();
+  if (text.isEmpty) {
+    return "$fieldName tidak boleh kosong!";
+  }
+  return validateOptionalUrl(text, maxLength: maxLength);
 }
